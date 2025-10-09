@@ -6,3 +6,12 @@ services:
       - "3000:80"
     volumes:
       - ./code:/usr/share/nginx/html
+    depends_on:
+      - php 
+  php:
+    image: php:8.2-fpm
+    container_name: lab2_php
+    volumes:
+      - ./www:/var/www/html
+    expose:
+      - "9000"
