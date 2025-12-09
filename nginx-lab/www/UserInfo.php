@@ -1,6 +1,8 @@
 <?php
-class UserInfo {
-    public static function getInfo(): array {
+class UserInfo 
+{
+    public static function getInfo(): array 
+    {
         return [
             'ip' => self::getClientIp(),
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',
@@ -12,7 +14,8 @@ class UserInfo {
         ];
     }
 
-    private static function getClientIp(): string {
+    private static function getClientIp(): string 
+    {
         $ipKeys = [
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED_FOR',
@@ -23,8 +26,10 @@ class UserInfo {
             'REMOTE_ADDR'
         ];
 
-        foreach ($ipKeys as $key) {
-            if (isset($_SERVER[$key])) {
+        foreach ($ipKeys as $key) 
+        {
+            if (isset($_SERVER[$key])) 
+            {
                 $ips = explode(',', $_SERVER[$key]);
                 $ip = trim($ips[0]);
                 if (filter_var($ip, FILTER_VALIDATE_IP)) {
@@ -36,7 +41,8 @@ class UserInfo {
         return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     }
 
-    private static function getBrowser(): string {
+    private static function getBrowser(): string 
+    {
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         
         $browsers = [
@@ -47,8 +53,10 @@ class UserInfo {
             'Opera' => '/OPR\/(\d+)/',
         ];
 
-        foreach ($browsers as $browser => $pattern) {
-            if (preg_match($pattern, $userAgent, $matches)) {
+        foreach ($browsers as $browser => $pattern) 
+        {
+            if (preg_match($pattern, $userAgent, $matches)) 
+            {
                 return $browser . ' ' . $matches[1];
             }
         }
@@ -56,7 +64,8 @@ class UserInfo {
         return 'Unknown';
     }
 
-    private static function getOS(): string {
+    private static function getOS(): string 
+    {
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         
         $osList = [
@@ -68,8 +77,10 @@ class UserInfo {
             'iOS' => '/(iPhone|iPad)/',
         ];
 
-        foreach ($osList as $os => $pattern) {
-            if (preg_match($pattern, $userAgent)) {
+        foreach ($osList as $os => $pattern) 
+        {
+            if (preg_match($pattern, $userAgent)) 
+            {
                 return $os;
             }
         }
@@ -77,16 +88,19 @@ class UserInfo {
         return 'Unknown';
     }
 
-    public static function saveLastVisit(): void {
+    public static function saveLastVisit(): void 
+    {
         setcookie('last_visit', date('Y-m-d H:i:s'), time() + 86400, '/');
         setcookie('visit_count', (int)($_COOKIE['visit_count'] ?? 0) + 1, time() + 86400, '/');
     }
 
-    public static function getLastVisit(): ?string {
+    public static function getLastVisit(): ?string 
+    {
         return $_COOKIE['last_visit'] ?? null;
     }
 
-    public static function getVisitCount(): int {
+    public static function getVisitCount(): int 
+    {
         return (int)($_COOKIE['visit_count'] ?? 0);
     }
 }

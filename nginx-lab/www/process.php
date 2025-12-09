@@ -13,27 +13,33 @@ $faculty = isset($_POST['faculty']) ? $_POST['faculty'] : '';
 $studyForm = isset($_POST['studyForm']) ? $_POST['studyForm'] : '';
 $agree = isset($_POST['agree']) ? 'yes' : 'no';
 
-if (empty($name)) {
+if (empty($name)) 
+{
     $errors[] = "Имя не может быть пустым";
 }
 
-if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) 
+{
     $errors[] = "Некорректный email";
 }
 
-if ($age < 16 || $age > 100) {
+if ($age < 16 || $age > 100) 
+{
     $errors[] = "Возраст должен быть от 16 до 100 лет";
 }
 
-if (empty($faculty)) {
+if (empty($faculty)) 
+{
     $errors[] = "Необходимо выбрать факультет";
 }
 
-if (empty($studyForm)) {
+if (empty($studyForm)) 
+{
     $errors[] = "Необходимо выбрать форму обучения";
 }
 
-if (!empty($errors)) {
+if (!empty($errors)) 
+{
     $_SESSION['errors'] = $errors;
     header("Location: index.php");
     exit();

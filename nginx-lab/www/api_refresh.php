@@ -10,13 +10,16 @@ $apiData = $api->request($apiUrl, true);
 
 $_SESSION['api_data'] = $apiData;
 
-if ($apiData['success']) {
+if ($apiData['success']) 
+{
     echo json_encode([
         'success' => true,
         'regions' => $apiData['data'],
         'timestamp' => $apiData['timestamp']
     ], JSON_UNESCAPED_UNICODE);
-} else {
+} 
+else 
+{
     echo json_encode([
         'success' => false,
         'error' => $apiData['error']
