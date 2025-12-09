@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация студента</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Регистрация студента</h1>
+        <p class="subtitle">Заполните все поля для завершения регистрации</p>
+
+        <form id="studentForm">
+            <div class="form-group">
+                <label for="name">Имя студента *</label>
+                <input type="text" id="name" name="name" placeholder="Введите полное имя" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Возраст *</label>
+                <input type="number" id="age" name="age" min="16" max="100" placeholder="От 16 до 100 лет" required>
+            </div>
+
+            <div class="form-group">
+                <label for="faculty">Факультет *</label>
+                <select id="faculty" name="faculty" required>
+                    <option value="">Выберите факультет</option>
+                    <option value="cs">Компьютерные науки</option>
+                    <option value="math">Математика</option>
+                    <option value="physics">Физика</option>
+                    <option value="economics">Экономика</option>
+                    <option value="law">Юриспруденция</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="agree" name="agree" required>
+                        <label for="agree">Согласен с правилами университета *</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Форма обучения *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="fulltime" name="studyForm" value="fulltime" required>
+                        <label for="fulltime">Очная</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="parttime" name="studyForm" value="parttime">
+                        <label for="parttime">Заочная</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="evening" name="studyForm" value="evening">
+                        <label for="evening">Вечерняя</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <div class="inactivity-warning" id="warning">
+        ⚠️ Пожалуйста, заполните форму!
+    </div>
+
+    <script>
+        const form = document.getElementById('studentForm');
+        const resultDiv = document.getElementById('result');
+        const warningDiv = document.getElementById('warning');
+        
+        let inactivityTimer;
+        const INACTIVITY_TIMEOUT = 15000;
+
+        const facultyNames = {
+            'cs': 'Компьютерные науки',
+            'math': 'Математика',
+            'physics': 'Физика',
+            'economics': 'Экономика',
+            'law': 'Юриспруденция'
+        };
+
+        const studyFormNames = {
+            'fulltime': 'Очная',
+            'parttime': 'Заочная',
+            'evening': 'Вечерняя'
+        };
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            warningDiv.classList.remove('show');
+            
+            inactivityTimer = setTimeout(() => {
+                showInactivityWarning();
+            }, INACTIVITY_TIMEOUT);
+        }
+
+        function showInactivityWarning() {
+            const inputs = form.querySelectorAll('input[type="text"], input[type="number"], select');
+            inputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('warning');
+                    setTimeout(() => input.classList.remove('warning'), 2000);
+                }
+            });
+
+            warningDiv.classList.add('show');
+            setTimeout(() => warningDiv.classList.remove('show'), 3000);
+        }
+
+        ['input', 'change', 'click', 'keypress'].forEach(eventType => {
+            form.addEventListener(eventType, resetInactivityTimer);
+        });
+
+        resetInactivityTimer();
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            clearTimeout(inactivityTimer);
+            
+            const formData = new FormData(this);
+            const data = {};
+            
+            for (const [name, value] of formData.entries()) {
+                data[name] = value;
+            }
+
+            const facultyDisplay = facultyNames[data.faculty] || data.faculty;
+            const studyFormDisplay = studyFormNames[data.studyForm] || data.studyForm;
+            const agreeDisplay = data.agree ? 'Да' : 'Нет';
+
+            let output = '<h2>✅ Регистрация успешна!</h2>';
+            output += `<p><b>Имя:</b> ${data.name}</p>`;
+            output += `<p><b>Возраст:</b> ${data.age} лет</p>`;
+            output += `<p><b>Факультет:</b> ${facultyDisplay}</p>`;
+            output += `<p><b>Согласие с правилами:</b> ${agreeDisplay}</p>`;
+            output += `<p><b>Форма обучения:</b> ${studyFormDisplay}</p>`;
+
+            resultDiv.innerHTML = output;
+            resultDiv.classList.add('show');
+
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>
