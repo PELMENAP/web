@@ -14,7 +14,58 @@ class Student {
     }
 
     public function getAll() {
-        $stmt = $this->pdo->query("SELECT * FROM students ORDER BY id DESC");
+        $sql = "SELECT * FROM students ORDER BY created_at DESC";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+
+    public function getByMinAge($minAge) {
+        $sql = "SELECT * FROM students WHERE age >= ? ORDER BY created_at DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$minAge]);
+        return $stmt->fetchAll();
+    }
+
+    public function getByFaculty($faculty) {
+        $sql = "SELECT * FROM students WHERE faculty = ? ORDER BY created_at DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$faculty]);
+        return $stmt->fetchAll();
+    }
+
+    public function getTotalCount() {
+        $stmt = $this->pdo->query("SELECT COUNT(*) as total FROM students");
+        $result = $stmt->fetch();
+        return $result['total'];
+    }
+
+    public function getAverageAge() 
+    {
+        $stmt = $this->pdo->query("SELECT AVG(age) as avg_age FROM students");
+        $result = $stmt->fetch();
+        
+        if ($result['avg_age'] === null) {
+            return 0;
+        }
+        
+        return round($result['avg_age'], 1);
+    }
+
+    public function getStatsByFaculty() {
+        $sql = "SELECT faculty, COUNT(*) as count 
+                FROM students 
+                GROUP BY faculty 
+                ORDER BY count DESC";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+
+    public function getStatsByStudyForm() {
+        $sql = "SELECT study_form, COUNT(*) as count 
+                FROM students 
+                GROUP BY study_form 
+                ORDER BY count DESC";
+        $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll();
     }
 

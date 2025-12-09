@@ -342,3 +342,97 @@ button:active {
     margin: 0;
     font-size: 24px;
 }
+
+.filter-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.filter-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-top: 15px;
+}
+.filter-item {
+    flex: 1;
+    min-width: 200px;
+}
+.filter-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+.filter-item input,
+.filter-item select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.filter-btn {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.filter-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+.reset-btn {
+    background: #6c757d;
+}
+.reset-btn:hover {
+    background: #5a6268;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.stat-card h3 {
+    color: #667eea;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.stat-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+}
+.stat-list {
+    text-align: left;
+    margin-top: 10px;
+}
+.stat-list-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+}
+.active-filter {
+    background: #d4edda;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: #155724;
+    margin-bottom: 20px;
+    border-left: 4px solid #28a745;
+}
