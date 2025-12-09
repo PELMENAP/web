@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+require_once 'ApiClient.php';
+require_once 'UserInfo.php';
+
 $errors = [];
 
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
@@ -47,7 +50,6 @@ $_SESSION['age'] = $age;
 $_SESSION['faculty'] = $safeFaculty;
 $_SESSION['studyForm'] = $safeStudyForm;
 $_SESSION['agree'] = $agree;
-$_SESSION['success'] = "Регистрация прошла успешно!";
 
 $line = $safeName . ";" . $safeEmail . ";" . $age . ";" . $safeFaculty . ";" . $safeStudyForm . ";" . $agree . "\n";
 file_put_contents("data.txt", $line, FILE_APPEND | LOCK_EX);
@@ -55,6 +57,21 @@ file_put_contents("data.txt", $line, FILE_APPEND | LOCK_EX);
 setcookie('last_name', $safeName, time() + 3600, '/');
 setcookie('last_email', $safeEmail, time() + 3600, '/');
 setcookie('last_faculty', $safeFaculty, time() + 3600, '/');
+setcookie('last_submission', date('Y-m-d H:i:s'), time() + 3600, '/');
+
+UserInfo::saveLastVisit();
+
+$api = new ApiClient(300);
+$forceRefresh = isset($_GET['refresh']) && $_GET['refresh'] === '1';
+
+$apiUrl = 'https://api.hh.ru/areas';
+$apiData = $api->request($apiUrl, $forceRefresh);
+$_SESSION['api_data'] = $apiData;
+
+$userInfo = UserInfo::getInfo();
+$_SESSION['user_info'] = $userInfo;
+
+$_SESSION['success'] = "Регистрация прошла успешно!";
 
 header("Location: index.php");
 exit();
