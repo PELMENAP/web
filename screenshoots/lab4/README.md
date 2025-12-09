@@ -51,6 +51,8 @@ docker-compose up -d --build
 
 ```www/vendor``` — файлы guzzle
 ```www/composer.json``` — менеджер зависимостей Composer
+```www/ApiClient.php``` — класс клиента
+
 
 ```code/...``` — legacy код
 

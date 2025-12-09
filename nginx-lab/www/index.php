@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php session_start();
+if (file_exists(__DIR__ . '/UserInfo.php')) {
+    require_once __DIR__ . '/UserInfo.php';
+}
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
