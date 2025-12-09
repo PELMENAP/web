@@ -9,7 +9,9 @@ services:
     depends_on:
       - php 
   php:
-    image: php:8.2-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: lab2_php
     volumes:
       - ./www:/var/www/html

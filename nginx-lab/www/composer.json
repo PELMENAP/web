@@ -1,0 +1,6 @@
+{
+    "name": "root/html",
+    "require": {
+        "guzzlehttp/guzzle": "^7.10"
+    }
+}
