@@ -11,7 +11,7 @@
         <h1>Регистрация студента</h1>
         <p class="subtitle">Заполните все поля для завершения регистрации</p>
 
-        <form id="studentForm">
+        <form id="studentForm" action="process.php" method="POST">
             <div class="form-group">
                 <label for="name">Имя студента *</label>
                 <input type="text" id="name" name="name" placeholder="Введите полное имя" required>
@@ -32,6 +32,11 @@
                     <option value="economics">Экономика</option>
                     <option value="law">Юриспруденция</option>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="student@example.com">
             </div>
 
             <div class="form-group">
@@ -64,7 +69,9 @@
             <button type="submit">Зарегистрироваться</button>
         </form>
 
-        <div id="result"></div>
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="index.php" style="color: #667eea; text-decoration: none;">← На главную</a>
+        </div>
     </div>
 
     <div class="inactivity-warning" id="warning">
@@ -73,25 +80,10 @@
 
     <script>
         const form = document.getElementById('studentForm');
-        const resultDiv = document.getElementById('result');
         const warningDiv = document.getElementById('warning');
         
         let inactivityTimer;
         const INACTIVITY_TIMEOUT = 15000;
-
-        const facultyNames = {
-            'cs': 'Компьютерные науки',
-            'math': 'Математика',
-            'physics': 'Физика',
-            'economics': 'Экономика',
-            'law': 'Юриспруденция'
-        };
-
-        const studyFormNames = {
-            'fulltime': 'Очная',
-            'parttime': 'Заочная',
-            'evening': 'Вечерняя'
-        };
 
         function resetInactivityTimer() {
             clearTimeout(inactivityTimer);
@@ -103,7 +95,7 @@
         }
 
         function showInactivityWarning() {
-            const inputs = form.querySelectorAll('input[type="text"], input[type="number"], select');
+            const inputs = form.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], select');
             inputs.forEach(input => {
                 if (!input.value) {
                     input.classList.add('warning');
@@ -122,32 +114,11 @@
         resetInactivityTimer();
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            clearTimeout(inactivityTimer);
-            
             const formData = new FormData(this);
-            const data = {};
+            const name = formData.get('name');
+            const email = formData.get('email');
             
-            for (const [name, value] of formData.entries()) {
-                data[name] = value;
-            }
-
-            const facultyDisplay = facultyNames[data.faculty] || data.faculty;
-            const studyFormDisplay = studyFormNames[data.studyForm] || data.studyForm;
-            const agreeDisplay = data.agree ? 'Да' : 'Нет';
-
-            let output = '<h2>✅ Регистрация успешна!</h2>';
-            output += `<p><b>Имя:</b> ${data.name}</p>`;
-            output += `<p><b>Возраст:</b> ${data.age} лет</p>`;
-            output += `<p><b>Факультет:</b> ${facultyDisplay}</p>`;
-            output += `<p><b>Согласие с правилами:</b> ${agreeDisplay}</p>`;
-            output += `<p><b>Форма обучения:</b> ${studyFormDisplay}</p>`;
-
-            resultDiv.innerHTML = output;
-            resultDiv.classList.add('show');
-
-            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            alert(`Отправка данных:\nИмя: ${name}\nEmail: ${email || 'не указан'}`);
         });
     </script>
 </body>
