@@ -46,19 +46,9 @@ docker-compose up -d --build
 ```nginx/nginx.conf``` — конфигурация сервера nginx
 ```nginx/fastcgi_params``` — набор переменных окружения
 
-```www/index.php``` — главная HTML-страница
-```www/form.html``` — форма
-```www/process``` — обработчик формы
-```www/view.php``` — просмотр всех регистраций
-```www/style.css``` — таблица стилей
-```www/data.txt``` — файл - хранилище
+```www/src/RedisExample.php``` — пример работы с реляционной БД
+```www/src/Helpers/ClientFactory.php``` — фабрика для удобного создания клиентов
 
-```www/vendor``` — файлы guzzle
-```www/composer.json``` — менеджер зависимостей Composer
-```www/ApiClient.php``` — класс клиента
-
-
-```code/...``` — legacy код
 
 ```screenshots/``` — все скриншоты
 
