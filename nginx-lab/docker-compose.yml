@@ -2,64 +2,69 @@ version: '3.8'
 
 services:
   php:
-    image: php:8.2-fpm
-    container_name: php
+    build: .
+    container_name: lab7_php
     volumes:
       - ./www:/var/www/html
     expose:
       - "9000"
     depends_on:
-      - rabbitmq
-      - kafka
+      rabbitmq:
+        condition: service_healthy
+      kafka:
+        condition: service_started
     working_dir: /var/www/html
-    command: >
-      sh -c "
-      apt-get update && 
-      apt-get install -y git unzip curl librdkafka-dev &&
-      docker-php-ext-install sockets &&
-      curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&
-      cd /var/www/html &&
-      composer install --no-interaction &&
-      php-fpm
-      "
 
   rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbit
+    image: rabbitmq:3.12-management
+    container_name: lab7_rabbit
     ports:
       - "5672:5672"
       - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   zookeeper:
-    image: bitnamilegacy/zookeeper:latest
-    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: lab7_zookeeper
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
 
   kafka:
-    image: bitnamilegacy/kafka:latest
-    container_name: kafka
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: lab7_kafka
     ports:
       - "9092:9092"
+      - "29092:29092"
     environment:
-      - KAFKA_ENABLE_KRAFT=no
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     depends_on:
       - zookeeper
+    healthcheck:
+      test: kafka-broker-api-versions --bootstrap-server localhost:9092
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nginx:
     image: nginx:alpine
-    container_name: lab6_nginx
+    container_name: lab7_nginx
     ports:
-      - "8000:80"
+      - "8080:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./www:/var/www/html
